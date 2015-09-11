@@ -1,5 +1,13 @@
 #!/usr/bin/env python2.7
-# v 0.1b
+# version 0.2 - programmes d'optimisation
+# 
+# Copyright (c) 2015 Jonathan Viandier <jonathan.viandier@free.fr>
+#       Tuteur de stage : Sylvain Antoine <santoine@univ-jfc.fr>
+#       SysAdmin        : Ludovic Pouzenc <lpouzenc@univ-jfc.fr>
+# 
+# Ce programme a ete ecrit par Jonathan Viandier pour une amelioration du
+# systeme de clonage des machines de chaque salle de TP, au sein de l'Uni
+# versite Jean-Francois Champollion.
 
 import os, sys, logging
 

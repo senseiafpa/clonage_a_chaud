@@ -13,28 +13,43 @@ import os, sys, logging, hashlib, binascii
 
 def main():
     ### Creation des logs
-    LOG_FILENAME = "/var/log/clone_dst_main.log"
-    #logging.basicConfig(filename=LOG_FILENAME,level=logging.WARN,format='%(asctime)s  %(levelname)s  %(funcName)s  %(message)s')
+    #os.mkdir("/var/log/clonage_a_chaud")
+    log_path = "/var/log/clonage_a_chaud"
+    try:
+        os.stat(log_path)
+    except:
+        os.mkdir(log_path)
+    LOG_FILENAME = "/var/log/clonage_a_chaud/clone_dst_main.log"
+    logging.basicConfig(filename=LOG_FILENAME,level=logging.WARN,format='%(asctime)s  %(levelname)s  %(funcName)s  %(message)s')
     #logging.basicConfig(filename=LOG_FILENAME,level=logging.INFO,format='%(asctime)s  %(levelname)s  %(funcName)s  %(message)s')
-    logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,format='%(asctime)s  %(levelname)s  %(funcName)s  %(message)s')
+    #logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,format='%(asctime)s  %(levelname)s  %(funcName)s  %(message)s')
     
     ### Ouverture pour ecriture par bit de sdb1
     logging.debug("Ouverture pour ecriture par bit de sdb1")
     dest_path = "/dev/sdb1"
-    fh_dest_read = open(dest_path, "rb")
-    fh_dest_write = open(dest_path, "wb")
+    #dest_path = "/tmp/sdb1"
+    fh_dest = open(dest_path, "r+b")
     
-    dest_size_disk = os.lseek(fh_dest_write.fileno(), 0, os.SEEK_END)
+    logging.debug("fd==%i"%fh_dest.fileno())
+    dest_size_disk = os.lseek(fh_dest.fileno(), 0, os.SEEK_END)
     logging.debug("Taille disque destination : %d" % dest_size_disk)
-    os.lseek(fh_dest_write.fileno(), 0, os.SEEK_SET)
-    aux_dest = fh_dest_read.read(2048*512)
+    os.lseek(fh_dest.fileno(), 0, os.SEEK_SET)
+    #sic = os.lseek(fh_dest.fileno(), 0, os.SEEK_SET)
     
     logging.debug("Ecriture sur disque destination")
     logging.info("Merci de bien vouloir patienter le temps de clonage du disque")
+    logging.warn("Ecriture sur disque destination")
+    
+    i=0
+    aux_dest = fh_dest.read(2048*512)
     while aux_dest != '':
+    #while aux_dest != '' and sic < 1024*2048*512+1 :
         hash_dest = hashlib.sha1(aux_dest).digest()
         logging.debug("Attente de lecture du hash_src")
         hash_src = sys.stdin.read(20)
+        logging.debug("---------------------------------------")
+        logging.debug("hash_src : %s " % binascii.hexlify(hash_src) )
+        logging.debug("---------------------------------------")
         logging.debug(binascii.hexlify(hash_src))
         
         if len(hash_src) != 20:
@@ -42,22 +57,27 @@ def main():
             break
         if hash_src != hash_dest:
             logging.info("Ecriture sur bloc")
-            sys.stdout.write('sent')
+            sys.stdout.write('sent\n')
             sys.stdout.flush()
             aux_src = sys.stdin.read(2048*512)
-            fh_dest_write.write(aux_src)
+            if len(aux_src) != 2048*512:
+                logging.error("Error dst 2")
+                break
+            os.lseek(fh_dest.fileno(), i*2048*512, os.SEEK_SET)
+            fh_dest.write(aux_src)
         else:
             logging.info("Passage au bloc suivant")
-            sys.stdout.write('next')
+            sys.stdout.write('next\n')
             sys.stdout.flush()
-            os.lseek(fh_dest_write.fileno(), 2048*512, os.SEEK_CUR)
-        aux_dest = fh_dest_read.read(2048*512)
+        aux_dest = fh_dest.read(2048*512)
+        logging.debug("len(aux_dest)==%i"%len(aux_dest))
+        i += 1
+
     sys.stdin.close()
     sys.stdout.close()
-    fh_dest_read.close()
-    fh_dest_write.close()
+    fh_dest.close()
     logging.info("Clonage disque fini. Merci d'avoir attendu patiemment")
-    
+    logging.warn("Clonage disque fini. Merci d'avoir attendu patiemment")
 
 if __name__ == '__main__':
     main()
