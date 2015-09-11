@@ -1,0 +1,1 @@
+tune2fs -U clear /dev/sdb1; sleep 3; tune2fs -U random /dev/sdb1
