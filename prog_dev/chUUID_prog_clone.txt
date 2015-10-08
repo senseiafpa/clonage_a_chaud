@@ -1,8 +1,0 @@
-	avant copie d'une partition "à chaud"
-930e5235-3361-4175-b49b-87e535e169ff -> /dev/sdb1 (08/10/2015 - 11:35)
-f6799215-ae2c-456c-9415-f61a7dd604cf -> /dev/sda1 (08/10/2015 - 10:35)
-
-	après copie d'une partition "à chaud"
-1b6942eb-3bd1-4bcd-a543-3eeebe237771 -> /dev/sdb1 (08/10/2015 - 12:02)
-f6799215-ae2c-456c-9415-f61a7dd604cf -> /dev/sda1 (08/10/2015 - 10:35)
-

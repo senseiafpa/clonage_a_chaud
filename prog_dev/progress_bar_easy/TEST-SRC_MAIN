@@ -1,0 +1,3 @@
+#!/bin/bash
+./src_main.py -d 127.0.0.1 -p /tmp/sdc ; rm iprange2_IPRange_parsetab.* iprange2.pyc
+

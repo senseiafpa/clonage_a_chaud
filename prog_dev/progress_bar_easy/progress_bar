@@ -1,0 +1,2 @@
+#!/bin/bash
+(pv -n /dev/sda | dd of=/tmp/sdb bs=128M conv=notrunc,noerror) 2>&1 | dialog --gauge "Running dd command (cloning), please wait..." 10 70 0

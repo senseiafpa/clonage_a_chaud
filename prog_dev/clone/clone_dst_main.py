@@ -1,5 +1,7 @@
 #!/usr/bin/env python2.7
 # version 0.3 - programmes d'optimisation
+#
+# -*- coding: utf-8 -*-
 # 
 # Copyright (c) 2015 Jonathan Viandier <jonathan.viandier@free.fr>
 #       Tuteur de stage : Sylvain Antoine <santoine@univ-jfc.fr>
